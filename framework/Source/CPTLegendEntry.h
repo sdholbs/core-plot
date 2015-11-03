@@ -1,13 +1,26 @@
 #import "CPTDefinitions.h"
 
+/// @file
+
+@class CPTLegendEntry;
 @class CPTPlot;
 @class CPTTextStyle;
+
+/**
+ *  @brief An array of CPTLegendEntry objects.
+ **/
+typedef NSArray<CPTLegendEntry *> *CPTLegendEntryArray;
+
+/**
+ *  @brief A mutable array of CPTLegendEntry objects.
+ **/
+typedef NSMutableArray<CPTLegendEntry *> *CPTMutableLegendEntryArray;
 
 @interface CPTLegendEntry : NSObject<NSCoding>
 
 /// @name Plot Info
 /// @{
-@property (nonatomic, readwrite, cpt_weak_property, nullable) __cpt_weak CPTPlot *plot;
+@property (nonatomic, readwrite, cpt_weak_property, nullable) cpt_weak CPTPlot *plot;
 @property (nonatomic, readwrite, assign) NSUInteger index;
 /// @}
 

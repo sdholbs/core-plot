@@ -2,6 +2,8 @@
 #import "CPTResponder.h"
 #import <QuartzCore/QuartzCore.h>
 
+/// @file
+
 @class CPTGraph;
 @class CPTShadow;
 
@@ -15,11 +17,31 @@ extern NSString *__nonnull const CPTLayerBoundsDidChangeNotification;
 
 /// @}
 
+/**
+ *  @brief An array of CALayer objects.
+ **/
+typedef NSArray<CALayer *> *CPTSublayerArray;
+
+/**
+ *  @brief A mutable array of CALayer objects.
+ **/
+typedef NSMutableArray<CALayer *> *CPTMutableSublayerArray;
+
+/**
+ *  @brief A set of CALayer objects.
+ **/
+typedef NSSet<CALayer *> *CPTSublayerSet;
+
+/**
+ *  @brief A mutable set of CALayer objects.
+ **/
+typedef NSMutableSet<CALayer *> *CPTMutableSublayerSet;
+
 @interface CPTLayer : CALayer<CPTResponder>
 
 /// @name Graph
 /// @{
-@property (nonatomic, readwrite, cpt_weak_property, nullable) __cpt_weak CPTGraph *graph;
+@property (nonatomic, readwrite, cpt_weak_property, nullable) cpt_weak CPTGraph *graph;
 /// @}
 
 /// @name Padding
@@ -54,7 +76,7 @@ extern NSString *__nonnull const CPTLayerBoundsDidChangeNotification;
 
 /// @name Layout
 /// @{
-@property (nonatomic, readonly, nullable) NSSet *sublayersExcludedFromAutomaticLayout;
+@property (nonatomic, readonly, nullable) CPTSublayerSet sublayersExcludedFromAutomaticLayout;
 /// @}
 
 /// @name Initialization

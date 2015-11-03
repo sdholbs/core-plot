@@ -7,7 +7,7 @@
 
 @interface DatePlot()
 
-@property (nonatomic, readwrite, strong) NSArray *plotData;
+@property (nonatomic, readwrite, strong) NSArray<NSDictionary *> *plotData;
 
 @end
 
@@ -20,7 +20,7 @@
     [super registerPlotItem:self];
 }
 
--(id)init
+-(instancetype)init
 {
     if ( (self = [super init]) ) {
         self.title   = @"Date Plot";
@@ -36,7 +36,7 @@
         const NSTimeInterval oneDay = 24 * 60 * 60;
 
         // Add some data
-        NSMutableArray *newData = [NSMutableArray array];
+        NSMutableArray<NSDictionary *> *newData = [NSMutableArray array];
 
         for ( NSUInteger i = 0; i < 5; i++ ) {
             NSTimeInterval xVal = oneDay * i;

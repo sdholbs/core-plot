@@ -13,7 +13,7 @@ static NSString *const kPlotIdentifier = @"Data Source Plot";
 
 @interface RealTimePlot()
 
-@property (nonatomic, readwrite, strong) NSMutableArray *plotData;
+@property (nonatomic, readwrite, strong) CPTMutableNumberArray plotData;
 @property (nonatomic, readwrite, assign) NSUInteger currentIndex;
 @property (nonatomic, readwrite, strong) NSTimer *dataTimer;
 
@@ -30,7 +30,7 @@ static NSString *const kPlotIdentifier = @"Data Source Plot";
     [super registerPlotItem:self];
 }
 
--(id)init
+-(instancetype)init
 {
     if ( (self = [super init]) ) {
         plotData  = [[NSMutableArray alloc] initWithCapacity:kMaxDataPoints];

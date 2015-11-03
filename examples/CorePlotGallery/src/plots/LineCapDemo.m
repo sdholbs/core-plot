@@ -12,7 +12,7 @@
     [super registerPlotItem:self];
 }
 
--(id)init
+-(instancetype)init
 {
     if ( (self = [super init]) ) {
         self.title   = @"Line Caps";
@@ -60,7 +60,7 @@
     lineCap.fill      = [CPTFill fillWithColor:[CPTColor blueColor]];
 
     // Axes
-    NSMutableArray *axes = [[NSMutableArray alloc] init];
+    CPTMutableAxisArray axes = [[NSMutableArray alloc] init];
 
     CPTLineCapType lineCapType = CPTLineCapTypeNone;
     while ( lineCapType < CPTLineCapTypeCustom ) {

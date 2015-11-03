@@ -83,7 +83,7 @@ void drawErrorText(CGContextRef context, CGRect rect)
  */
 @synthesize numberOfPlots;
 
-+(NSDictionary *)attributes
++(NSDictionary<NSString *, NSString *> *)attributes
 {
     /*
      * Return a dictionary of attributes describing the plug-in (QCPlugInAttributeNameKey, QCPlugInAttributeDescriptionKey...).
@@ -113,7 +113,7 @@ void drawErrorText(CGContextRef context, CGRect rect)
     return kQCPlugInTimeModeNone;
 }
 
--(id)init
+-(instancetype)init
 {
     if ( (self = [super init]) ) {
         /*
@@ -162,7 +162,7 @@ void drawErrorText(CGContextRef context, CGRect rect)
 #pragma mark -
 #pragma mark Input and output port configuration
 
-+(NSArray *)sortedPropertyPortKeys
++(CPTStringArray)sortedPropertyPortKeys
 {
     return @[@"inputPixelsWide",
              @"inputPixelsHigh",
@@ -186,7 +186,7 @@ void drawErrorText(CGContextRef context, CGRect rect)
              @"inputAxisMinorTickWidth"];
 }
 
-+(NSDictionary *)attributesForPropertyPortWithKey:(NSString *)key
++(CPTDictionary)attributesForPropertyPortWithKey:(NSString *)key
 {
     /*
      * Specify the optional attributes for property based ports (QCPortAttributeNameKey, QCPortAttributeDefaultValueKey...).
@@ -254,7 +254,7 @@ void drawErrorText(CGContextRef context, CGRect rect)
 
     if ( [key isEqualToString:@"inputAxisColor"] ) {
         CGColorRef axisColor = CGColorCreateGenericRGB(1.0, 1.0, 1.0, 1.0);
-        NSDictionary *result = @{
+        CPTDictionary result = @{
             QCPortAttributeNameKey: @"Axis Color",
             QCPortAttributeDefaultValueKey: CFBridgingRelease(axisColor)
         };
@@ -319,7 +319,7 @@ void drawErrorText(CGContextRef context, CGRect rect)
 
     if ( [key isEqualToString:@"inputPlotAreaColor"] ) {
         CGColorRef plotAreaColor = CGColorCreateGenericRGB(0.0, 0.0, 0.0, 0.4);
-        NSDictionary *result     = @{
+        CPTDictionary result     = @{
             QCPortAttributeNameKey: @"Plot Area Color",
             QCPortAttributeDefaultValueKey: CFBridgingRelease(plotAreaColor)
         };
@@ -538,7 +538,8 @@ void drawErrorText(CGContextRef context, CGRect rect)
     CGColorSpaceRef rgbColorSpace = CGColorSpaceCreateDeviceRGB();
     [img lockBufferRepresentationWithPixelFormat:pixelFormat colorSpace:rgbColorSpace forBounds:[img imageBounds]];
     CGColorSpaceRelease(rgbColorSpace);
-    void *baseAddress           = (void *)[img bufferBaseAddress];
+
+    const void *baseAddress     = [img bufferBaseAddress];
     NSUInteger pixelsWide       = [img bufferPixelsWide];
     NSUInteger pixelsHigh       = [img bufferPixelsHigh];
     NSUInteger bitsPerComponent = 8;
@@ -670,7 +671,7 @@ static void _BufferReleaseCallback(const void *address, void *context)
     numberOfPlots = number;
 }
 
-+(NSArray *)plugInKeys
++(CPTStringArray)plugInKeys
 {
     return @[@"numberOfPlots"];
 }
@@ -794,7 +795,7 @@ static void _BufferReleaseCallback(const void *address, void *context)
 
 @implementation CorePlotQCPlugIn(Execution)
 
--(BOOL)execute:(id<QCPlugInContext>)context atTime:(NSTimeInterval)time withArguments:(NSDictionary *)arguments
+-(BOOL)execute:(id<QCPlugInContext>)context atTime:(NSTimeInterval)time withArguments:(CPTDictionary)arguments
 {
     // Configure the plot for drawing
     BOOL configurationCheck = [self configureGraph];

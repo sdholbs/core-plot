@@ -9,7 +9,7 @@
 /// @cond
 @interface CPTGraphHostingView()
 
-@property (nonatomic, readwrite, cpt_weak_property) __cpt_weak UIPinchGestureRecognizer *pinchGestureRecognizer;
+@property (nonatomic, readwrite, cpt_weak_property) cpt_weak UIPinchGestureRecognizer *pinchGestureRecognizer;
 
 -(void)graphNeedsRedraw:(NSNotification *)notification;
 -(void)handlePinchGesture:(UIPinchGestureRecognizer *)aPinchGestureRecognizer;
@@ -45,7 +45,7 @@
 /// @cond
 
 /** @internal
- *  @property __cpt_weak id pinchGestureRecognizer
+ *  @property cpt_weak id pinchGestureRecognizer
  *  @brief The pinch gesture recognizer for this view.
  **/
 @synthesize pinchGestureRecognizer;
@@ -129,7 +129,7 @@
 
 /// @cond
 
--(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+-(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
     BOOL handled = NO;
     [super touchesBegan:touches withEvent:event];
@@ -154,7 +154,7 @@
     
 }
 
--(void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+-(void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
     CPTGraph *theHostedGraph = self.hostedGraph;
     [super touchesMoved:touches withEvent:event];
@@ -173,7 +173,7 @@
     [theHostedGraph pointingDeviceDraggedEvent:event atPoint:pointOfTouch];
 }
 
--(void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+-(void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
     CPTGraph *theHostedGraph = self.hostedGraph;
     [super touchesEnded:touches withEvent:event];
@@ -192,7 +192,7 @@
     [theHostedGraph pointingDeviceUpEvent:event atPoint:pointOfTouch];
 }
 
--(void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
+-(void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
 {
     [super touchesCancelled:touches withEvent:event];
     [self.hostedGraph pointingDeviceCancelledEvent:event];
@@ -323,9 +323,9 @@
         }
     }
     else {
-        if ( hostedGraph ) {
-            hostedGraph.frame = self.layer.bounds;
-            [self.layer addSublayer:hostedGraph];
+        if ( newLayer ) {
+            newLayer.frame = self.layer.bounds;
+            [self.layer addSublayer:newLayer];
         }
     }
 }
@@ -336,11 +336,12 @@
         collapsesLayers = collapse;
         
         CPTGraph *theHostedGraph = self.hostedGraph;
-        
+
+        [self setNeedsDisplay];
+
         if ( collapsesLayers ) {
             [theHostedGraph removeFromSuperlayer];
-            [self setNeedsDisplay];
-            
+
             if ( theHostedGraph ) {
                 [[NSNotificationCenter defaultCenter] addObserver:self
                                                          selector:@selector(graphNeedsRedraw:)

@@ -145,9 +145,9 @@ static NSString *const barPlot2       = @"Bar Plot 2";
     x.minorTicksPerInterval = 2;
     x.majorGridLineStyle    = majorGridLineStyle;
     x.minorGridLineStyle    = minorGridLineStyle;
-    NSArray *exclusionRanges = @[[CPTPlotRange plotRangeWithLocation:@1.99 length:@0.02],
-                                 [CPTPlotRange plotRangeWithLocation:@0.99 length:@0.02],
-                                 [CPTPlotRange plotRangeWithLocation:@2.99 length:@0.02]];
+    CPTPlotRangeArray exclusionRanges = @[[CPTPlotRange plotRangeWithLocation:@1.99 length:@0.02],
+                                          [CPTPlotRange plotRangeWithLocation:@0.99 length:@0.02],
+                                          [CPTPlotRange plotRangeWithLocation:@2.99 length:@0.02]];
     x.labelExclusionRanges = exclusionRanges;
 
     NSMutableAttributedString *xTitle = [[NSMutableAttributedString alloc] initWithString:@"X Axis\nLine 2"];
@@ -285,7 +285,7 @@ static NSString *const barPlot2       = @"Bar Plot 2";
 
     if ( !hasData ) {
         // Add some initial data
-        NSMutableArray *contentArray = [NSMutableArray arrayWithCapacity:100];
+        NSMutableArray<NSDictionary *> *contentArray = [NSMutableArray arrayWithCapacity:100];
         for ( NSUInteger i = 0; i < 60; i++ ) {
             NSNumber *x = @(1.0 + i * 0.05);
             NSNumber *y = @(1.2 * arc4random() / (double)UINT32_MAX + 1.2);
@@ -464,12 +464,12 @@ static NSString *const barPlot2       = @"Bar Plot 2";
     hitAnnotationTextStyle.fontName = @"Helvetica-Bold";
 
     // Determine point of symbol in plot coordinates
-    NSDictionary *dataPoint = (self.arrangedObjects)[index];
+    NSDictionary<NSString *, NSNumber *> *dataPoint = (self.arrangedObjects)[index];
 
     NSNumber *x = dataPoint[@"x"];
     NSNumber *y = dataPoint[@"y"];
 
-    NSArray *anchorPoint = @[x, y];
+    CPTNumberArray anchorPoint = @[x, y];
 
     // Add annotation
     // First make a string for the y value
@@ -510,9 +510,9 @@ static NSString *const barPlot2       = @"Bar Plot 2";
 
     // Determine point of symbol in plot coordinates
 
-    NSNumber *x          = @0;
-    NSNumber *y          = [self numberForPlot:plot field:0 recordIndex:index];
-    NSArray *anchorPoint = @[x, @(index)];
+    NSNumber *x                = @0;
+    NSNumber *y                = [self numberForPlot:plot field:0 recordIndex:index];
+    CPTNumberArray anchorPoint = @[x, @(index)];
 
     // Add annotation
     // First make a string for the y value
@@ -565,7 +565,11 @@ static NSString *const barPlot2       = @"Bar Plot 2";
 
     if ( [pdfSavingDialog runModal] == NSOKButton ) {
         NSData *dataForPDF = [self.graph dataForPDFRepresentationOfLayer];
-        [dataForPDF writeToURL:[pdfSavingDialog URL] atomically:NO];
+
+        NSURL *url = [pdfSavingDialog URL];
+        if ( url ) {
+            [dataForPDF writeToURL:url atomically:NO];
+        }
     }
 }
 
@@ -579,8 +583,12 @@ static NSString *const barPlot2       = @"Bar Plot 2";
         NSImage *image            = [self.graph imageOfLayer];
         NSData *tiffData          = [image TIFFRepresentation];
         NSBitmapImageRep *tiffRep = [NSBitmapImageRep imageRepWithData:tiffData];
-        NSData *pngData           = [tiffRep representationUsingType:NSPNGFileType properties:nil];
-        [pngData writeToURL:[pngSavingDialog URL] atomically:NO];
+        NSData *pngData           = [tiffRep representationUsingType:NSPNGFileType properties:[NSDictionary dictionary]];
+
+        NSURL *url = [pngSavingDialog URL];
+        if ( url ) {
+            [pngData writeToURL:url atomically:NO];
+        }
     }
 }
 
@@ -598,11 +606,14 @@ static NSString *const barPlot2       = @"Bar Plot 2";
 
     self.hostView.printRect = printRect;
 
-    NSPrintOperation *printOperation = [NSPrintOperation printOperationWithView:self.hostView printInfo:printInfo];
-    [printOperation runOperationModalForWindow:self.hostView.window
-                                      delegate:self
-                                didRunSelector:@selector(printOperationDidRun:success:contextInfo:)
-                                   contextInfo:NULL];
+    NSWindow *window = self.hostView.window;
+    if ( window ) {
+        NSPrintOperation *printOperation = [NSPrintOperation printOperationWithView:self.hostView printInfo:printInfo];
+        [printOperation runOperationModalForWindow:window
+                                          delegate:self
+                                    didRunSelector:@selector(printOperationDidRun:success:contextInfo:)
+                                       contextInfo:NULL];
+    }
 }
 
 -(void)printOperationDidRun:(NSPrintOperation *)printOperation success:(BOOL)success contextInfo:(void *)contextInfo
@@ -715,7 +726,7 @@ static NSString *const barPlot2       = @"Bar Plot 2";
 -(void)rotateObjectUsingTransform:(CATransform3D)rotationTransform
 {
     [CATransaction begin];
-    [CATransaction setValue:(id)kCFBooleanTrue forKey:kCATransactionDisableActions];
+    [CATransaction setValue:@(YES) forKey:kCATransactionDisableActions];
 
     self.graph.superlayer.sublayerTransform = rotationTransform;
 

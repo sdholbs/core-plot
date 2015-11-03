@@ -8,7 +8,7 @@
 
 @implementation CPTTextStyle(CPTPlatformSpecificTextStyleExtensions)
 
-/** @property NSDictionary *attributes
+/** @property CPTDictionary attributes
  *  @brief A dictionary of standard text attributes suitable for formatting an NSAttributedString.
  *
  *  The dictionary will contain values for the following keys that represent the receiver's text style:
@@ -34,7 +34,7 @@
  *  @param attributes A dictionary of standard text attributes.
  *  @return A new CPTTextStyle instance.
  **/
-+(instancetype)textStyleWithAttributes:(NSDictionary *)attributes
++(instancetype)textStyleWithAttributes:(CPTDictionary)attributes
 {
     CPTMutableTextStyle *newStyle = [CPTMutableTextStyle textStyle];
 
@@ -67,12 +67,17 @@
 
 /// @cond
 
--(NSDictionary *)attributes
+-(CPTDictionary)attributes
 {
-    NSMutableDictionary *myAttributes = [NSMutableDictionary dictionary];
+    CPTMutableDictionary myAttributes = [NSMutableDictionary dictionary];
 
     // Font
-    UIFont *styleFont = [UIFont fontWithName:self.fontName size:self.fontSize];
+    UIFont *styleFont  = nil;
+    NSString *fontName = self.fontName;
+
+    if ( fontName ) {
+        styleFont = [UIFont fontWithName:fontName size:self.fontSize];
+    }
 
     if ( styleFont ) {
         [myAttributes setValue:styleFont
@@ -108,7 +113,7 @@
 
 /// @cond
 
-+(instancetype)textStyleWithAttributes:(NSDictionary *)attributes
++(instancetype)textStyleWithAttributes:(CPTDictionary)attributes
 {
     CPTMutableTextStyle *newStyle = [CPTMutableTextStyle textStyle];
 
@@ -168,7 +173,12 @@
         textSize.height = ceil(textSize.height);
     }
     else {
-        UIFont *theFont = [UIFont fontWithName:style.fontName size:style.fontSize];
+        UIFont *theFont    = nil;
+        NSString *fontName = style.fontName;
+
+        if ( fontName ) {
+            theFont = [UIFont fontWithName:fontName size:style.fontSize];
+        }
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
@@ -213,7 +223,12 @@
         UIColor *styleColor = style.attributes[NSForegroundColorAttributeName];
         [styleColor set];
 
-        UIFont *theFont = [UIFont fontWithName:style.fontName size:style.fontSize];
+        UIFont *theFont    = nil;
+        NSString *fontName = style.fontName;
+
+        if ( fontName ) {
+            theFont = [UIFont fontWithName:fontName size:style.fontSize];
+        }
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"

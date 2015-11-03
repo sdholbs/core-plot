@@ -28,6 +28,16 @@ typedef NS_ENUM (NSInteger, CPTPlotCachePrecision) {
     CPTPlotCachePrecisionDecimal ///< All cached data will be converted to @ref NSDecimal.
 };
 
+/**
+ *  @brief An array of plots.
+ **/
+typedef NSArray<__kindof CPTPlot *> *CPTPlotArray;
+
+/**
+ *  @brief A mutable array of plots.
+ **/
+typedef NSMutableArray<__kindof CPTPlot *> *CPTMutablePlotArray;
+
 #pragma mark -
 
 /**
@@ -129,7 +139,7 @@ typedef NS_ENUM (NSInteger, CPTPlotCachePrecision) {
  *  @param indexRange The range of the data indexes of interest.
  *  @return An array of data labels.
  **/
--(nullable NSArray *)dataLabelsForPlot:(nonnull CPTPlot *)plot recordIndexRange:(NSRange)indexRange;
+-(nullable NSArray<CPTLayer *> *)dataLabelsForPlot:(nonnull CPTPlot *)plot recordIndexRange:(NSRange)indexRange;
 
 /** @brief @optional Gets a data label for the given plot.
  *  This method will not be called if
@@ -243,7 +253,7 @@ typedef NS_ENUM (NSInteger, CPTPlotCachePrecision) {
 
 /// @name Data Source
 /// @{
-@property (nonatomic, readwrite, cpt_weak_property, nullable) __cpt_weak id<CPTPlotDataSource> dataSource;
+@property (nonatomic, readwrite, cpt_weak_property, nullable) cpt_weak id<CPTPlotDataSource> dataSource;
 /// @}
 
 /// @name Identification
@@ -369,8 +379,8 @@ typedef NS_ENUM (NSInteger, CPTPlotCachePrecision) {
 /// @name Fields
 /// @{
 -(NSUInteger)numberOfFields;
--(nonnull NSArray *)fieldIdentifiers;
--(nonnull NSArray *)fieldIdentifiersForCoordinate:(CPTCoordinate)coord;
+-(nonnull CPTNumberArray)fieldIdentifiers;
+-(nonnull CPTNumberArray)fieldIdentifiersForCoordinate:(CPTCoordinate)coord;
 -(CPTCoordinate)coordinateForFieldIdentifier:(NSUInteger)field;
 /// @}
 

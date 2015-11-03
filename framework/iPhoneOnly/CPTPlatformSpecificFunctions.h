@@ -1,3 +1,6 @@
+#import "CPTDefinitions.h"
+#import "CPTPlatformSpecificDefines.h"
+
 /// @file
 
 #if __cplusplus
@@ -11,9 +14,9 @@ void CPTPopCGContext(void);
 
 /// @}
 
-/// @name Graphics Context
+/// @name Debugging
 /// @{
-__nonnull CGContextRef CPTGetCurrentContext(void);
+CPTNativeImage *__nonnull CPTQuickLookImage(CGRect rect, __nonnull CPTQuickLookImageBlock renderBlock);
 
 /// @}
 

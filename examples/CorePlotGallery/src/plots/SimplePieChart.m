@@ -7,7 +7,7 @@
 
 @interface SimplePieChart()
 
-@property (nonatomic, readwrite, strong) NSArray *plotData;
+@property (nonatomic, readwrite, strong) CPTNumberArray plotData;
 @property (nonatomic, readwrite) NSUInteger offsetIndex;
 @property (nonatomic, readwrite) CGFloat sliceOffset;
 
@@ -24,7 +24,7 @@
     [super registerPlotItem:self];
 }
 
--(id)init
+-(instancetype)init
 {
     if ( (self = [super init]) ) {
         self.title   = @"Simple Pie Chart";
@@ -135,8 +135,8 @@
 
     self.offsetIndex = NSNotFound;
 
-    NSMutableArray *newData = [[NSMutableArray alloc] init];
-    NSUInteger dataCount    = (NSUInteger)lrint( ceil(10.0 * arc4random() / (double)UINT32_MAX) ) + 1;
+    CPTMutableNumberArray newData = [[NSMutableArray alloc] init];
+    NSUInteger dataCount          = (NSUInteger)lrint( ceil(10.0 * arc4random() / (double)UINT32_MAX) ) + 1;
     for ( NSUInteger i = 1; i < dataCount; i++ ) {
         [newData addObject:@(100.0 * arc4random() / (double)UINT32_MAX)];
     }
